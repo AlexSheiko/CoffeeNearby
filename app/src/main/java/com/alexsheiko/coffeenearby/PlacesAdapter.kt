@@ -2,14 +2,18 @@ package com.alexsheiko.coffeenearby
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.google.android.gms.location.places.Place
+import kotlinx.android.synthetic.main.item_place.view.*
 
 class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.ViewHolder>() {
 
     // Provide a reference to the views for each data item
-    class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
+    class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+
+        val nameTextView = rootView.nameTextView
+    }
 
 
     // Create new views (invoked by the layout manager)
