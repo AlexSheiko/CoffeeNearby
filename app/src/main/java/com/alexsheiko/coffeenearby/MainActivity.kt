@@ -16,8 +16,8 @@ private const val QUERY_STARBUCKS = "Starbucks"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mGeoDataClient: GeoDataClient
-    private lateinit var mPlaceDetectionClient: PlaceDetectionClient
+    private lateinit var geoDataClient: GeoDataClient
+    private lateinit var placeDetectionClient: PlaceDetectionClient
 
     private val placesAdapter by lazy { PlacesAdapter() }
 
@@ -33,7 +33,18 @@ class MainActivity : AppCompatActivity() {
         request.addOnCompleteListener { response ->
             if (response.isSuccessful) {
                 // If places are loaded, show them in a list
-                response.result.forEach { item -> item.getPrimaryText(null) }
+                response.result.forEach {
+                    // Get place info like name, address, images
+                    val placeDetailsRequest = geoDataClient.getPlaceById(it.placeId)
+                    placeDetailsRequest.addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            // Display most likely suggestion for place ID
+                            placesAdapter.add(it.result.single())
+                        } else {
+                            it.exception?.printStackTrace()
+                        }
+                    }
+                }
                 statusTextView.text = "Loaded ${response.result.count()} places"
             } else {
                 // On error, notify user
@@ -53,15 +64,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun initPlaceLoader() {
         // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(this)
+        geoDataClient = Places.getGeoDataClient(this)
 
         // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this)
+        placeDetectionClient = Places.getPlaceDetectionClient(this)
     }
 
     private fun createPlacesRequest(): Task<AutocompletePredictionBufferResponse> {
         val placeFilter = Builder().setTypeFilter(TYPE_FILTER_ESTABLISHMENT).build()
-        return mGeoDataClient.getAutocompletePredictions(QUERY_STARBUCKS, null,
+        return geoDataClient.getAutocompletePredictions(QUERY_STARBUCKS, null,
                 placeFilter)
     }
 }
