@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                statusTextView.text = "Loaded ${response.result.count()} places"
+                statusTextView.text = null
             } else {
                 // On error, notify user
                 statusTextView.text = getString(string.error_loading_failed)

@@ -3,16 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/nameTextView"
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Starbucks" />
+
+    <TextView
+        android:id="@+id/addressTextView"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/nameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+        app:layout_constraintVertical_bias="0.4"
+        tools:text="Seattle, WA 98124-1067 USA" />
 
 </android.support.constraint.ConstraintLayout>

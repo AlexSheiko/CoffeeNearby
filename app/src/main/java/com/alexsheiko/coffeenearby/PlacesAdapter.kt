@@ -13,6 +13,7 @@ class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.ViewHolder>() {
     class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
 
         val nameTextView = rootView.nameTextView
+        val addressTextView = rootView.addressTextView
     }
 
 
@@ -32,6 +33,7 @@ class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.ViewHolder>() {
         // - get element from the dataset at this position
         // - replace the contents of the view with that element
         holder.nameTextView.text = dataset[position].name
+        holder.addressTextView.text = dataset[position].address
     }
 
     // Return the size of the dataset (invoked by the layout manager)
