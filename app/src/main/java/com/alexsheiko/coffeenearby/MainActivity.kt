@@ -3,6 +3,8 @@ package com.alexsheiko.coffeenearby
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.alexsheiko.coffeenearby.R.string
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.AutocompleteFilter.Builder
 import com.google.android.gms.location.places.AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse
@@ -19,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var geoDataClient: GeoDataClient
     private lateinit var placeDetectionClient: PlaceDetectionClient
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private val placesAdapter by lazy { PlacesAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         initPlaceLoader()
+        initLocationProvider()
 
         val request = createPlacesRequest()
         request.addOnCompleteListener { response ->
@@ -55,6 +60,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initLocationProvider() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
     private fun setupRecyclerView() {
         recyclerView.apply {
             setHasFixedSize(true)
@@ -73,6 +82,6 @@ class MainActivity : AppCompatActivity() {
     private fun createPlacesRequest(): Task<AutocompletePredictionBufferResponse> {
         val placeFilter = Builder().setTypeFilter(TYPE_FILTER_ESTABLISHMENT).build()
         return geoDataClient.getAutocompletePredictions(QUERY_STARBUCKS, null,
-                placeFilter)
+                null)
     }
 }
