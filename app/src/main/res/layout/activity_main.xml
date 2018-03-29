@@ -6,15 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- A RecyclerView for showing a list of places -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+    <!-- Loading status indicator -->
     <TextView
         android:id="@+id/statusTextView"
-        android:layout_width="wrap_content"
         style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/list_status_loading"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/list_status_loading" />
 
 </android.support.constraint.ConstraintLayout>
