@@ -36,8 +36,8 @@ class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
         val lat = intent.getDoubleExtra("lat", 0.0)
         val lng = intent.getDoubleExtra("lng", 0.0)
         // Add a marker to selected place and move the camera
-        val sydney = LatLng(lat, lng)
-        mMap.addMarker(MarkerOptions().position(sydney).title(name))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13f))
+        val position = LatLng(lat, lng)
+        mMap.addMarker(MarkerOptions().position(position).title(name))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 13f))
     }
 }

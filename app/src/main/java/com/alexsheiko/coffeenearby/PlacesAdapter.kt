@@ -34,7 +34,7 @@ class PlacesAdapter(val context: Context) : RecyclerView.Adapter<PlacesAdapter.V
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // - get element from the dataset at this position
         // - replace the contents of the view with that element
-        holder.nameTextView.text = dataset[position].name
+        holder.nameTextView.text = "${position + 1}. ${dataset[position].name}"
         holder.addressTextView.text = dataset[position].address
         holder.itemView.setOnClickListener {
             val place = dataset[position]

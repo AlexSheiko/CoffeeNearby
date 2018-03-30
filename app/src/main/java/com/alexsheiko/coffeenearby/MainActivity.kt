@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                         // Get notified about the results on the main UI thread
                         .observeOn(mainThread())
                         // Afterwards, hide progress indicator
-                        .doAfterSuccess {
+                        .doOnSuccess {
                             statusTextView.text = null
                             buttonRetry.visibility = GONE
                         }
@@ -122,7 +122,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     // Load last known user location to find coffee shops nearby
     private fun loadMyLocation(): Observable<Location> {
-        return Observable.just(Location(""))
         return Observable.create { emitter ->
             val locationRequest = LocationRequest.create().apply {
                 interval = 10000
