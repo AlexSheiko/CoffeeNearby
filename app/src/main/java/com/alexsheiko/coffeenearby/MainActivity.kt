@@ -1,6 +1,6 @@
 package com.alexsheiko.coffeenearby
 
-import android.Manifest
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
@@ -85,6 +85,15 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("NeedOnRequestPermissionsResult")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // NOTE: delegate the permission handling to generated method
+        onRequestPermissionsResult(requestCode, grantResults)
+        // Reload app to trigger loading of places
+        restartApp()
+    }
+
     override fun onDestroy() {
         // Stop observable chains and free up resources
         disposables.clear()
@@ -113,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         overridePendingTransition(0, 0)
     }
 
-    @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+    @NeedsPermission(ACCESS_COARSE_LOCATION)
     fun initMyLocationProvider() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
