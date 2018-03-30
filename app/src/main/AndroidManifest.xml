@@ -27,11 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCCHbl8j7BUIgptzYoJMjs_TN5ud2x0n4E" />
-
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail">
@@ -39,6 +34,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.alexsheiko.coffeenearby.MainActivity" />
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCCHbl8j7BUIgptzYoJMjs_TN5ud2x0n4E" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

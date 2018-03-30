@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View.GONE
@@ -11,6 +12,8 @@ import android.view.View.VISIBLE
 import com.alexsheiko.coffeenearby.R.string
 import com.google.android.gms.location.*
 import com.google.android.gms.location.places.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.CompositeDisposable
@@ -28,9 +31,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var placeDetectionClient: PlaceDetectionClient
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val placesAdapter by lazy { PlacesAdapter() }
+    private val placesAdapter by lazy { PlacesAdapter(this) }
     private val disposables = CompositeDisposable()
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         // Add async operation to disposables to be able to stop and release resources onDestroy
         disposables.add(
-                // Load last known user location without requesting location updates, to save battery
+                // Load last known user location
                 loadMyLocation()
                         // Load all places that match "Starbucks" query
                         .flatMap { myLocation -> loadPlacesNearby(myLocation, QUERY_STARBUCKS) }
@@ -118,6 +122,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     // Load last known user location to find coffee shops nearby
     private fun loadMyLocation(): Observable<Location> {
+        return Observable.just(Location(""))
         return Observable.create { emitter ->
             val locationRequest = LocationRequest.create().apply {
                 interval = 10000
@@ -138,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            fusedLocationClient.requestLocationUpdates(locationRequest, callback, null /* Looper */)
+            fusedLocationClient.requestLocationUpdates(locationRequest, callback, Looper.getMainLooper())
         }
     }
 
@@ -159,8 +164,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadPlacesNearby(nearLocation: Location, query: String)
             : Observable<AutocompletePredictionBufferResponse> {
+        val latLngBounds = LatLngBounds.builder()
+                .include(LatLng(nearLocation.latitude, nearLocation.longitude))
+                .build()
         return Observable.create { emitter ->
-            val request = geoDataClient.getAutocompletePredictions(query, null, null)
+            val request = geoDataClient.getAutocompletePredictions(query, latLngBounds, null)
             request.addOnSuccessListener {
                 emitter.onNext(it)
                 emitter.onComplete()
