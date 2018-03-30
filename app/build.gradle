@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -40,6 +39,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+
+    // Permission handling
+    implementation 'com.github.hotchemi:permissionsdispatcher:3.0.1'
+    kapt 'com.github.hotchemi:permissionsdispatcher-processor:3.0.1'
 
     // Testing
     implementation 'com.google.android.gms:play-services-maps:12.0.1'

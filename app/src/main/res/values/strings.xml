@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Coffee Nearby</string>
     <string name="app_name_emoji">Coffee Nearby ☕</string>
-    <string name="error_loading_failed">Failed to load places</string>
-    <string name="list_status_loading">Loading...</string>
+    <string name="error_loading_failed">Failed to load places 😞</string>
+    <string name="list_status_loading">⏳ Loading…</string>
     <string name="title_activity_detail">Details</string>
+    <string name="hint_check_network">Check your network connection</string>
+    <string name="retry">Retry</string>
 </resources>
