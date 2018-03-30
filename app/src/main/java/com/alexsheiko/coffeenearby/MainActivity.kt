@@ -37,22 +37,30 @@ class MainActivity : AppCompatActivity() {
         disposables.add(
                 // Load all places that match "Starbucks" query
                 loadPlaces(QUERY_STARBUCKS)
-                        // On error, notify user and log error
-                        .doOnError { handleError(it) }
-                        // On success, convert response to a list of places
+                        // Convert response to a list of places
                         .flatMapIterable { response -> response.asIterable() }
                         // For each place, load additional info to show in a preview
                         .flatMap { loadPlaceInfo(it.placeId) }
-                        // Merge all places with details back to list
+                        // Combine all places with details back to list
                         .toList()
-                        // Execute this whole operation on the background IO thread
+                        // Execute all these operations on the background IO thread
                         .subscribeOn(io())
                         // Get notified about the results on the main UI thread
                         .observeOn(mainThread())
-                        // On success, hide progress indicator
+                        // Afterwards, hide progress indicator
                         .doAfterSuccess { statusTextView.text = null }
-                        // Show loaded place list in the adapter
-                        .subscribe { placeList -> placesAdapter.addAll(placeList) }
+                        // Subscribe to observable chain to get results
+                        .subscribe(
+                                {
+                                    // On success, show loaded place list in the recycler view
+                                    placeList ->
+                                    placesAdapter.addAll(placeList)
+                                },
+                                {
+                                    // On error, notify user and log error
+                                    handleError(it)
+                                }
+                        )
         )
     }
 
