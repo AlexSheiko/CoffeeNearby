@@ -8,6 +8,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.*
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers.io
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val QUERY_STARBUCKS = "Starbucks"
@@ -19,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val placesAdapter by lazy { PlacesAdapter() }
+    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +33,32 @@ class MainActivity : AppCompatActivity() {
         initPlaceFinder()
         initMyLocationProvider()
 
-        loadPlaces(QUERY_STARBUCKS)
-                // On error, notify user and log error
-                .doOnError { handleError(it) }
-                // On success, convert response to a list of places
-                .flatMap { response -> Observable.fromIterable(response.asIterable()) }
-                // For each place, load additional info to show in a preview
-                .forEach { loadPlaceInfo(it.placeId) }
+        // Add async operation to disposables to be able to stop and release resources onDestroy
+        disposables.add(
+                // Load all places that match "Starbucks" query
+                loadPlaces(QUERY_STARBUCKS)
+                        // On error, notify user and log error
+                        .doOnError { handleError(it) }
+                        // On success, convert response to a list of places
+                        .flatMapIterable { response -> response.asIterable() }
+                        // For each place, load additional info to show in a preview
+                        .flatMap { loadPlaceInfo(it.placeId) }
+                        // Merge all places with details back to list
+                        .toList()
+                        // Execute this whole operation on the background IO thread
+                        .subscribeOn(io())
+                        // Get notified about the results on the main UI thread
+                        .observeOn(mainThread())
+                        // On success, hide progress indicator
+                        .doAfterSuccess { statusTextView.text = null }
+                        // Show loaded place list in the adapter
+                        .subscribe { placeList -> placesAdapter.addAll(placeList) }
+        )
+    }
 
+    override fun onDestroy() {
+        disposables.clear()
+        super.onDestroy()
     }
 
     private fun handleError(it: Throwable) {

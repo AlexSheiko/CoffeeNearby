@@ -39,9 +39,9 @@ class PlacesAdapter : RecyclerView.Adapter<PlacesAdapter.ViewHolder>() {
     // Return the size of the dataset (invoked by the layout manager)
     override fun getItemCount() = dataset.size
 
-    fun add(place: Place) {
-        dataset.add(place)
+    fun addAll(placeList: List<Place>) {
+        dataset.addAll(placeList)
 
-        notifyItemInserted(dataset.size)
+        notifyItemRangeInserted(0, dataset.size)
     }
 }
